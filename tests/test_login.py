@@ -74,4 +74,13 @@ def test_login_success(driver):
     
     #로그아웃
     driver.find_element(By.XPATH, '//button[contains(@class, "css-1s53dya")]').click()
-    logout_btn = driver.find_element(By.XPATH, '//p[contains(@class, "MuiTypography-root") and text()="로그아웃"]').click()
+    time.sleep(1)
+    logout_btn = driver.find_element(By.XPATH, '//p[contains(@class, "MuiTypography-root") and text()="로그아웃"]').click()    
+       
+    try:
+        el_login_pw = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.NAME, "password")
+    ))
+        assert el_login_pw.is_displayed(), "로그아웃 후 password가 표시되지 않음"
+    except NoSuchElementException:
+        assert False, "로그아웃 실패: password가 요소가 없음"
+    print("로그아웃 성공 테스트 완료!")
