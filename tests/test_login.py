@@ -1,19 +1,19 @@
-import time
 import pytest
+import time
 from selenium import webdriver
-from selenium.common import ElementNotVisibleException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import NoSuchElementException
+import sys, os
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# ---------------------------
-# Fixture : 브라우저 실행/종료
-# ---------------------------
+from utils.utils import login, logout
+from utils.constants import LOGIN_ID, LOGIN_PW   # 🔥 상수 import
+
 @pytest.fixture
 def driver():
     chrome_options = Options()
@@ -25,62 +25,83 @@ def driver():
     driver.implicitly_wait(5)
 
     yield driver
-
-    # 테스트 종료 후 브라우저 닫기
     driver.quit()
 
+#정상 로그인/로그아웃 테스트
+def test_login_logout(driver):
+    # 🔥 상수 사용
+    login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
+    logout(driver)
+    print("로그인 및 로그아웃 테스트 완료!")
 
-# ---------------------------
-# 실제 테스트
-# ---------------------------
-def test_login_success(driver):
-    wait = WebDriverWait(driver, 10)
-    url = "https://qaproject.elice.io/ai-helpy-chat"
+    
+#비정상 로그인(잘못된 이메일 형식)
+def test_login_invalid_email(driver):
+    # 잘못된 이메일과 정상 비밀번호
+    invalid_email = "invalid_id"  # 이메일 형식 아님
+    password = ""
 
-    driver.get(url)
-    time.sleep(1)
-
-    # 로그인 ID 입력
-    el_login_id = driver.find_element(By.NAME, "loginId")
-    el_login_id.send_keys("qa3team04@elicer.com")
-
-    time.sleep(1)
-
-    # 로그인 PW 입력
-    el_login_pw = driver.find_element(By.NAME, "password")
-    el_login_pw.send_keys("20qareset25elice!")
-
-    time.sleep(1)
-
-    # 로그인 버튼 클릭
-    driver.find_element(By.ID, ":r3:").click()
-    time.sleep(2)
+    # 로그인 시도
+    login(driver, invalid_email, password, check_success=False)
 
     try:
-        textarea = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located(
-        (By.XPATH, '//textarea[@placeholder="메시지를 입력하세요..."]')
-    )
-)
-        assert textarea.is_displayed(), "로그인 후 textarea가 표시되지 않음"
-    except NoSuchElementException:
-        assert False, "로그인 실패: textarea 요소가 없음"
+        error_msg = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//p[contains(text(), "Invalid email format.")]')
+                #(By.ID, ":r3:-helper-text")
+            )
+        )
+        #assert error_msg.is_displayed(), "잘못된 이메일 입력 시 오류 메시지가 표시되지 않음"
+        assert "Invalid email format" in error_msg.text, f"예상 오류 메시지와 다름. 실제 메시지: '{error_msg.text}'"
+    except:
+        assert False, "로그인 실패 시 예상된 오류 메시지를 찾지 못함"
 
-    print("로그인 성공 테스트 완료!")
+    print("잘못된 이메일 로그인 테스트 완료!")
+
+
+#비정상 로그인(짧은 비밀번호)
+def test_login_short_password(driver):
     
-    #//*[@id=":r1o:"]/div[2]/button[2]
-    #/html/body/div[3]/div[3]/div[2]/div[2]/div[3]/div[2]/p
-    #body > div.MuiDrawer-root.MuiDrawer-modal.MuiModal-root.css-1wutq42 > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation16.MuiDrawer-paper.MuiDrawer-paperAnchorBottom.css-a43l9p > div.MuiBox-root.css-1yw7e41 > div.MuiBox-root.css-0 > div:nth-child(7) > div.MuiListItemText-root.css-1lsm35k > p
-    
-    #로그아웃
-    driver.find_element(By.XPATH, '//button[contains(@class, "css-1s53dya")]').click()
-    time.sleep(1)
-    logout_btn = driver.find_element(By.XPATH, '//p[contains(@class, "MuiTypography-root") and text()="로그아웃"]').click()    
-       
+    # 정상 이메일, 8자 이하 비밀번호
+    valid_email = LOGIN_ID
+    short_password = "1234567"  # 7자 (8자 이하)
+
+    # 로그인 시도, 성공 검증은 하지 않음
+    login(driver, valid_email, short_password, check_success=False)
+
+    # 비밀번호 짧음으로 인한 로그인 실패 메시지 확인
     try:
-        el_login_pw = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.NAME, "password")
-    ))
-        assert el_login_pw.is_displayed(), "로그아웃 후 password가 표시되지 않음"
-    except NoSuchElementException:
-        assert False, "로그아웃 실패: password가 요소가 없음"
-    print("로그아웃 성공 테스트 완료!")
+        error_msg = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//p[contains(text(), "Please enter a password of at least 8 digits.")]')                
+            )
+        )
+        assert "Please enter a password of at least 8 digits." in error_msg.text, f"예상 오류 메시지와 다름. 실제 메시지: '{error_msg.text}'"
+    except:
+        assert False, "로그인 실패 시 예상된 오류 메시지를 찾지 못함"
+
+    print("비밀번호 8자 이하 입력 테스트 완료!")
+    
+    
+#비정상 로그인(틀린 비밀번호)
+def test_login_wrong_password(driver):
+    
+    # 정상 이메일, 8자 이하 비밀번호
+    valid_email = LOGIN_ID
+    short_password = "wrongpassword"  #잘못된 비밀번호
+
+    # 로그인 시도, 성공 검증은 하지 않음
+    login(driver, valid_email, short_password, check_success=False)
+
+    # 비밀번호 틀림으로 인한 로그인 실패 메시지 확인
+    try:
+        error_msg = WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located(
+                (By.XPATH, '//p[contains(text(), "Email or password does not match")]')                
+            )
+        )
+        assert "Email or password does not match" in error_msg.text, f"예상 오류 메시지와 다름. 실제 메시지: '{error_msg.text}'"
+    except:
+        assert False, "로그인 실패 시 예상된 오류 메시지를 찾지 못함"
+
+    print("비밀번호 8자 이하 입력 테스트 완료!")
