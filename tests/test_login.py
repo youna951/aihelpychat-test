@@ -14,6 +14,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW   # 🔥 상수 import
 
+# ---------------------------------------------------------------------------------
+# 로그인/로그아웃 기능 테스트
+# ---------------------------------------------------------------------------------
+
 @pytest.fixture
 def driver():
     chrome_options = Options()
