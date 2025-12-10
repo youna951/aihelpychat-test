@@ -16,6 +16,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW
 
+# ---------------------------------------------------------------------------------
+# 메시지 입력 창 좌측 "+" 버튼 클릭 기능 테스트
+# ---------------------------------------------------------------------------------
+
 # ---------------------------
 # 브라우저 실행/종료 fixture
 # ---------------------------

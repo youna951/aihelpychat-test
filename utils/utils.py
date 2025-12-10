@@ -25,7 +25,7 @@ def login(driver, login_id, login_pw, check_success=True):
     driver.find_element(By.ID, ":r3:").click()
     time.sleep(2)
 
-    # 로그인 성공 검증 (선택적)
+    # 로그인 성공 검증
     if check_success:
         try:
             textarea = WebDriverWait(driver, 10).until(
