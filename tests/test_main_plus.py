@@ -2,12 +2,9 @@ import pytest
 import time
 import pyautogui
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 import sys, os
 
 # utils 경로 추가
@@ -19,22 +16,6 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 # ---------------------------------------------------------------------------------
 # 메시지 입력 창 좌측 "+" 버튼 클릭 기능 테스트
 # ---------------------------------------------------------------------------------
-
-# ---------------------------
-# 브라우저 실행/종료 fixture
-# ---------------------------
-@pytest.fixture
-def driver():
-    chrome_options = Options()
-    chrome_options.add_experimental_option("detach", True)
-    chrome_options.add_argument("--start-maximized")
-
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.implicitly_wait(5)
-
-    yield driver
-    driver.quit()
 
 # ---------------------------
 # 파일 업로드 테스트
@@ -71,7 +52,8 @@ def test_plus_fileUpload(driver):
     # ---------------------------
     # 파일 선택창에 경로 입력
     # ---------------------------
-    file_path = r"C:\Workspace\qa3team4\tests\upload_test.txt"  # raw string 사용
+    #file_path = r"C:\Workspace\qa3team4\tests\upload_test.txt"  # raw string 사용
+    file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests", "upload_test.txt")
     pyautogui.write(file_path)
     pyautogui.press('enter')
     time.sleep(2)  # 업로드 처리 대기

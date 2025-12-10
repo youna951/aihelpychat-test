@@ -1,9 +1,6 @@
 import pytest
 import time
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -18,18 +15,18 @@ from utils.constants import LOGIN_ID, LOGIN_PW   # 🔥 상수 import
 # 로그인/로그아웃 기능 테스트
 # ---------------------------------------------------------------------------------
 
-@pytest.fixture
-def driver():
-    chrome_options = Options()
-    chrome_options.add_experimental_option("detach", True)
-    chrome_options.add_argument("--start-maximized")
+# @pytest.fixture
+# def driver():
+#     chrome_options = Options()
+#     chrome_options.add_experimental_option("detach", True)
+#     chrome_options.add_argument("--start-maximized")
 
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.implicitly_wait(5)
+#     service = Service(ChromeDriverManager().install())
+#     driver = webdriver.Chrome(service=service, options=chrome_options)
+#     driver.implicitly_wait(5)
 
-    yield driver
-    driver.quit()
+#     yield driver
+#     driver.quit()
 
 #정상 로그인/로그아웃 테스트
 def test_login_logout(driver):
@@ -72,6 +69,31 @@ def test_login_short_password(driver):
 
     # 로그인 시도, 성공 검증은 하지 않음
     login(driver, valid_email, short_password, check_success=False)
+    
+     # --- View Password 기능 테스트 ---
+    try:
+        pw_input = driver.find_element(By.NAME, "password")
+        view_btn = driver.find_element(By.XPATH, '//button[@aria-label="View password"]')
+
+        # 초기 상태 확인
+        assert pw_input.get_attribute("type") == "password", "초기 비밀번호 타입이 password가 아님"
+        assert view_btn.get_attribute("aria-expanded") == "false", "초기 aria-expanded가 false가 아님"
+
+        # 클릭 → 타입 변경 + aria-expanded
+        view_btn.click()
+        time.sleep(0.5)
+        assert pw_input.get_attribute("type") == "text", "Eye 클릭 후 타입이 text가 아님"
+        assert view_btn.get_attribute("aria-expanded") == "true", "Eye 클릭 후 aria-expanded가 true가 아님"
+
+        # 다시 클릭 → 타입 원복 + aria-expanded
+        view_btn.click()
+        time.sleep(0.5)
+        assert pw_input.get_attribute("type") == "password", "Eye 다시 클릭 후 타입이 password로 돌아오지 않음"
+        assert view_btn.get_attribute("aria-expanded") == "false", "Eye 다시 클릭 후 aria-expanded가 false로 돌아오지 않음"
+
+        print("View Password 기능 테스트 완료!")
+    except Exception as e:
+        assert False, f"View Password 기능 테스트 실패: {e}"
 
     # 비밀번호 짧음으로 인한 로그인 실패 메시지 확인
     try:

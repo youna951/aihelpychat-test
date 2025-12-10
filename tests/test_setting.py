@@ -2,33 +2,14 @@ import sys, os
 import time
 import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 
 # 🔥 경로 추가 후 utils import
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW
-
-# ---------------------------
-# 브라우저 실행/종료 fixture
-# ---------------------------
-@pytest.fixture
-def driver():
-    chrome_options = Options()
-    chrome_options.add_experimental_option("detach", True)
-    chrome_options.add_argument("--start-maximized")
-
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.implicitly_wait(5)
-
-    yield driver
-    driver.quit()
 
 # ---------------------------
 # 체크박스 클릭 함수(정상동작 하지 않음!!!)
