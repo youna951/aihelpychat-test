@@ -56,9 +56,10 @@ def click_switch(driver, model_name, max_attempts=5):
 # ---------------------------
 # 테스트 본문
 # ---------------------------
-def test_model_checkboxes(driver):
+def test_model_checkboxes(logged_in_driver):
     # --- 로그인 / 설정 화면 이동 ---
-    login(driver, LOGIN_ID, LOGIN_PW)
+    #login(driver, LOGIN_ID, LOGIN_PW)
+    driver = logged_in_driver
     time.sleep(2)  # 로그인 안정화
 
     # 설정 메뉴 이동

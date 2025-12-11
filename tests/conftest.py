@@ -14,6 +14,7 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 
 #########################################
 # 기본 WebDriver Fixture
+# 독립 브라우저, 로그인 필요 없음 → driver
 #########################################
 @pytest.fixture
 def driver():
@@ -30,11 +31,36 @@ def driver():
     yield driver
     driver.quit()
 
+########################################################################
+# 브라우저 공유, 로그인 필요 없음 → driver_session
+########################################################################
+@pytest.fixture(scope="session")
+def driver_session():
+    chrome_options = Options()
+    chrome_options.add_experimental_option("detach", True)
+    chrome_options.add_argument("--window-size=1440,1280")
+    chrome_options.add_argument("--window-position=0,0")
+    
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver.implicitly_wait(5)
+
+    yield driver
+    driver.quit()
 
 
-#########################################
-# 로그인된 상태가 필요한 테스트를 위한 Fixture
-#########################################
+########################################################################
+# 로그인 (pytest 전체 세션에서 1회만 실행)
+# 브라우저 공유 + 로그인 필요 → login_once
+########################################################################
+@pytest.fixture(scope="session")
+def login_once(driver_session):
+    login(driver_session, LOGIN_ID, LOGIN_PW, check_success=True)    
+    return driver_session
+
+# #########################################
+# # 로그인된 상태가 필요한 테스트를 위한 Fixture
+# #########################################
 @pytest.fixture
 def logged_in_driver(driver):
     """로그인이 필요한 테스트용 Fixture"""

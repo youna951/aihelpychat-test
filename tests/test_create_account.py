@@ -107,7 +107,7 @@ def test_create_account_wrong_password(driver):
 )
 #회원가입 > 잘못된 이메일 / 짧거나 형식에 맞지 않는 비밀번호 입력 테스트(AHCT-T123)
 def test_create_account_input_validation(driver, email, password, email_error, pw_error):
-
+    #driver = driver_session
     driver.get("https://qaproject.elice.io/ai-helpy-chat")
     time.sleep(1)
 
@@ -152,3 +152,6 @@ def test_create_account_input_validation(driver, email, password, email_error, p
             assert False, f"예상 비밀번호 오류 메시지 못 찾음: {pw_error}"
 
     print("입력 검증 테스트 완료!")
+    
+    
+#AHCT-T144 (1.0) [로그인] Forgot your password? > 이메일 인증 / Go to login page > Remove history
