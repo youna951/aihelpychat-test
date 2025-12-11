@@ -20,12 +20,13 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 # ---------------------------
 # 파일 업로드 테스트
 # ---------------------------
-def test_plus_fileUpload(driver):
+def test_plus_fileUpload(login_once):
     # 로그인
-    login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
+    #login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
+    driver = login_once
     time.sleep(2)
 
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 30)
 
     # ---------------------------
     # 플러스 버튼 클릭 (업로드 메뉴 열기)
@@ -50,36 +51,84 @@ def test_plus_fileUpload(driver):
     time.sleep(2)  # 파일 선택창 대기
 
     # ---------------------------
-    # 파일 선택창에 경로 입력
+    # 업로드할 파일 경로 생성
     # ---------------------------
-    #file_path = r"C:\Workspace\qa3team4\tests\upload_test.txt"  # raw string 사용
-    file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests", "upload_test.txt")
-    pyautogui.write(file_path)
-    pyautogui.press('enter')
-    time.sleep(2)  # 업로드 처리 대기
+    base_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests")
+    filenames = [
+        "upload_test.txt",
+        "upload_test.docx",
+        "upload_test.pdf",
+        "upload_test.png",
+        "upload_test.jpg"
+    ]
+
+    # 파일 경로 → OS 파일선택창에서 여러 파일 선택 형식:  "경로1" "경로2" ...
+    file_paths_string = ' '.join(
+        f'"{os.path.join(base_dir, name)}"' for name in filenames
+    )
 
     # ---------------------------
-    # 업로드 완료 확인 (span 태그로 파일명 확인)
+    # 파일 선택창에 여러 파일 경로 입력
     # ---------------------------
-    uploaded_file_name = os.path.basename(file_path)
-    uploaded_file = wait.until(
-        EC.visibility_of_element_located(
-            (By.XPATH, f'//span[text()="{uploaded_file_name}"]')
+    pyautogui.write(file_paths_string)
+    pyautogui.press('enter')
+    time.sleep(3)  # 업로드 대기
+
+    # ---------------------------
+    # 각 파일 업로드 완료 확인
+    # ---------------------------
+    # ---------------------------
+    # 각 파일 업로드 완료 확인
+    # ---------------------------
+    text_files = ["upload_test.txt", "upload_test.docx", "upload_test.pdf"]
+    image_files = ["upload_test.png", "upload_test.jpg"]
+
+    # 텍스트 계열 파일 확인 (span)
+    for name in text_files:
+        uploaded_file = wait.until(
+            EC.visibility_of_element_located(
+                (By.XPATH, f'//span[text()="{name}"]')
+            )
+        )
+        #assert uploaded_file.is_displayed(), f"{name} 텍스트 파일 업로드 실패!"
+
+    # 이미지 계열 파일 확인 (img alt)
+    for name in image_files:
+        uploaded_img = wait.until(
+            EC.visibility_of_element_located(
+                (By.XPATH, f'//img[@alt="{name}"]')
+            )
+        )
+        #assert uploaded_img.is_displayed(), f"{name} 이미지 파일 업로드 실패!"
+        
+    #data-testid arrow-upIcon
+    arrow = wait.until(
+        EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, 'button:has(svg[data-testid="arrow-upIcon"])')
         )
     )
-    assert uploaded_file.is_displayed(), "파일 업로드 실패!"
+    arrow.click()
+    
+    complete_element = wait.until(
+        EC.visibility_of_element_located(
+            (By.XPATH, '//*[@data-status="complete"]')
+        )
+    )
 
-    print("파일 업로드 테스트 완료!")
+    assert complete_element.is_displayed(), "업로드 완료 상태(data-status=complete)가 확인되지 않음"
+        
+    print("5개 파일 업로드 확인 완료!")
+
     
 
 # ---------------------------
 # 이미지 생성 테스트
 # ---------------------------
-def test_plus_image(driver):
+def test_plus_image(login_once):
     # 로그인
-    login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
+    #login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
     time.sleep(2)
-
+    driver = login_once
     wait = WebDriverWait(driver, 10)
 
     # ---------------------------
@@ -119,11 +168,11 @@ def test_plus_image(driver):
 # ---------------------------
 # 웹 검색 테스트
 # ---------------------------
-def test_plus_web(driver):
+def test_plus_web(login_once):
     # 로그인
-    login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
+    #login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
     time.sleep(2)
-
+    driver = login_once
     wait = WebDriverWait(driver, 10)
 
     # ---------------------------
