@@ -12,7 +12,7 @@ from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW
 
 # ---------------------------
-# 체크박스 클릭 함수(정상동작 하지 않음!!!)
+# 체크박스 클릭 함수
 # ---------------------------
 def click_switch(driver, model_name, max_attempts=5):
     for attempt in range(1, max_attempts + 1):
@@ -53,9 +53,10 @@ def click_switch(driver, model_name, max_attempts=5):
             time.sleep(1)
     print(f"❌ {model_name} 체크 실패!")
 
-# ---------------------------
-# 테스트 본문
-# ---------------------------
+########################################################################################## 
+# [설정] AI 모델 설정 (AHCT-T107) 
+# [새 대화] 대화 버튼으로 새로운 대화 세션 생성 (AHCT-T13)
+########################################################################################## 
 def test_model_checkboxes(logged_in_driver):
     # --- 로그인 / 설정 화면 이동 ---
     #login(driver, LOGIN_ID, LOGIN_PW)
@@ -117,4 +118,4 @@ def test_model_checkboxes(logged_in_driver):
     print(len(lis))
     
     assert len(lis) == 10, f"모델 개수는 10이어야 합니다. 현재: {len(lis)}"
-    print("\n🎉 모든 모델 체크 완료!")
+    print("[설정] AI 모델 설정 (AHCT-T107) + [새 대화] 대화 버튼으로 새로운 대화 세션 생성 (AHCT-T13) 완료!")

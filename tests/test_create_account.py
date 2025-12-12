@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW   # 🔥 상수 import
+
   
 # 회원가입 > 잘못된 이메일 형식 입력 테스트(AHCT-T123)
 '''
@@ -105,7 +106,9 @@ def test_create_account_wrong_password(driver):
          "Please make your password stronger! Try to combine at least 8 characters including English, numeric and special characters."),
     ]
 )
+########################################################################################## 
 #회원가입 > 잘못된 이메일 / 짧거나 형식에 맞지 않는 비밀번호 입력 테스트(AHCT-T123)
+########################################################################################## 
 def test_create_account_input_validation(driver, email, password, email_error, pw_error):
     #driver = driver_session
     driver.get("https://qaproject.elice.io/ai-helpy-chat")
@@ -151,7 +154,47 @@ def test_create_account_input_validation(driver, email, password, email_error, p
         except:
             assert False, f"예상 비밀번호 오류 메시지 못 찾음: {pw_error}"
 
-    print("입력 검증 테스트 완료!")
+    print("회원가입 > 잘못된 이메일 / 짧거나 형식에 맞지 않는 비밀번호 입력 테스트(AHCT-T123) 완료!")
     
+##########################################################################################     
+# [로그인] Forgot your password? > 이메일 인증 / Go to login page > Remove history AHCT-T144
+########################################################################################## 
+def test_login_forgot_password(driver):
+    driver.get("https://qaproject.elice.io/ai-helpy-chat")
+    time.sleep(1)
     
-#AHCT-T144 (1.0) [로그인] Forgot your password? > 이메일 인증 / Go to login page > Remove history
+    #driver.find_element(By.XPATH, '//a[contains(text(), "Forgot your password")]').click()
+    link = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable(
+            (By.XPATH, '//a[contains(text(), "Forgot your password")]')
+        )
+    )
+    link.click()
+    time.sleep(1)
+    
+    driver.find_element(By.XPATH, '//input[@name="to"]').send_keys(LOGIN_ID)
+    time.sleep(1)
+    
+    driver.find_element(By.XPATH, '//button[@type="submit"]').click()
+    time.sleep(1)
+    
+    driver.find_element(By.XPATH, '//a[contains(text(), "Go to login page")]').click()
+    time.sleep(1)
+    
+    elements = driver.find_elements(By.XPATH, '//a[contains(text(), "Remove history")]')
+
+    if elements:
+        elements[0].click()
+        print("Remove history 버튼이 나타나 클릭했습니다.")
+    else:
+        print("Remove history 버튼이 없어 넘어갑니다.")
+        time.sleep(1)
+        
+    input_password = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located(
+            (By.NAME, 'password')
+        )
+    )
+    
+    assert input_password.is_displayed()
+    print("[로그인] Forgot your password? > 이메일 인증 / Go to login page > Remove history AHCT-T144 테스트 완료!")
