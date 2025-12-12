@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 
 
 def login(driver, login_id, login_pw, check_success=True):
@@ -63,3 +64,10 @@ def logout(driver):
         print("로그아웃 성공!")
     except NoSuchElementException:
         assert False, "로그아웃 실패: password 요소가 없음"
+        
+        
+#util_clearall 값 모두 삭제
+def clear_all(element):
+    element.click()
+    element.send_keys(Keys.CONTROL, "a")
+    element.send_keys(Keys.DELETE)
