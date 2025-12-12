@@ -15,16 +15,13 @@ def login(driver, login_id, login_pw, check_success=True):
     # ID 입력
     el_login_id = driver.find_element(By.NAME, "loginId")
     el_login_id.send_keys(login_id)
-    time.sleep(1)
 
     # PW 입력
     el_login_pw = driver.find_element(By.NAME, "password")
     el_login_pw.send_keys(login_pw)
-    time.sleep(1)
 
     # 로그인 버튼 클릭
     driver.find_element(By.ID, ":r3:").click()
-    time.sleep(2)
 
     # 로그인 성공 검증
     if check_success:

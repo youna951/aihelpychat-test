@@ -8,7 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # utils import
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.utils import login
+from utils.common import login
 from utils.constants import LOGIN_ID, LOGIN_PW
 
 

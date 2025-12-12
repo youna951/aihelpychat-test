@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # 🔥 경로 추가 후 utils import
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW
 
 # ---------------------------
