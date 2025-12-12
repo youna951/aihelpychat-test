@@ -17,16 +17,16 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 # 메시지 입력 창 좌측 "+" 버튼 클릭 기능 테스트
 # ---------------------------------------------------------------------------------
 
-# ---------------------------
-# 파일 업로드 테스트
-# ---------------------------
-def test_plus_fileUpload(login_once):
+##########################################################################################
+# [채팅 고급기능] 파일업로드 (AHCT-T7)
+##########################################################################################
+def test_plus_fileUpload(logged_in_driver):
     # 로그인
     #login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
-    driver = login_once
+    driver = logged_in_driver
     time.sleep(2)
 
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 100)
 
     # ---------------------------
     # 플러스 버튼 클릭 (업로드 메뉴 열기)
@@ -77,9 +77,6 @@ def test_plus_fileUpload(login_once):
     # ---------------------------
     # 각 파일 업로드 완료 확인
     # ---------------------------
-    # ---------------------------
-    # 각 파일 업로드 완료 확인
-    # ---------------------------
     text_files = ["upload_test.txt", "upload_test.docx", "upload_test.pdf"]
     image_files = ["upload_test.png", "upload_test.jpg"]
 
@@ -100,7 +97,9 @@ def test_plus_fileUpload(login_once):
             )
         )
         #assert uploaded_img.is_displayed(), f"{name} 이미지 파일 업로드 실패!"
-        
+    
+    driver.find_element(By.XPATH,"//textarea[@name='input']").send_keys("파일 업로드 테스트")
+    
     #data-testid arrow-upIcon
     arrow = wait.until(
         EC.element_to_be_clickable(
@@ -111,25 +110,85 @@ def test_plus_fileUpload(login_once):
     
     complete_element = wait.until(
         EC.visibility_of_element_located(
-            (By.XPATH, '//*[@data-status="complete"]')
+            (By.XPATH, '//div[@data-status="complete"]')
         )
     )
 
     assert complete_element.is_displayed(), "업로드 완료 상태(data-status=complete)가 확인되지 않음"
         
-    print("5개 파일 업로드 확인 완료!")
+    print("[채팅 고급기능] 파일업로드 (AHCT-T7) 완료!")
 
     
 
-# ---------------------------
-# 이미지 생성 테스트
-# ---------------------------
-def test_plus_image(login_once):
-    # 로그인
-    #login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
+##########################################################################################
+# [채팅 고급기능] 이미지생성 (AHCT-T12)
+##########################################################################################
+def test_plus_image(logged_in_driver):
     time.sleep(2)
-    driver = login_once
-    wait = WebDriverWait(driver, 10)
+    driver = logged_in_driver
+    wait = WebDriverWait(driver, 100)
+    # ---------------------------
+    # 플러스 버튼 클릭 (업로드 메뉴 열기)
+    # ---------------------------
+    plus_button = wait.until(
+        EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, 'button:has(svg[data-testid="plusIcon"])')
+        )
+    )
+    plus_button.click()
+    time.sleep(1)
+
+    # ---------------------------
+    # 이미지 생성 버튼 클릭
+    # ---------------------------
+    upload_button = wait.until(
+        EC.element_to_be_clickable(
+            (By.XPATH, '//span[text()="이미지 생성"]')
+        )
+    )
+    upload_button.click()
+    time.sleep(2)    
+
+    image_generate_button = wait.until(
+        EC.element_to_be_clickable(
+            (By.XPATH, '//span[text()="이미지 생성"]')
+        )
+    )
+    #assert image_generate_button.is_displayed(), "이미지 생성 클릭 실패!"
+    
+    driver.find_element(By.XPATH,"//textarea[@name='input']").send_keys("건방진 치와와 생성해줘")
+    
+    #data-testid arrow-upIcon
+    arrow = wait.until(
+        EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, 'button:has(svg[data-testid="arrow-upIcon"])')
+        )
+    )
+    arrow.click()
+    
+    complete_element = wait.until(
+        EC.visibility_of_element_located(
+            (By.XPATH, '//div[@data-status="complete"]')
+        )
+    )
+    # complete_element 안에 img 태그가 존재하는지 확인
+    try:
+        img_inside = complete_element.find_element(By.TAG_NAME, "img")
+        assert img_inside.is_displayed(), "<img> 태그가 표시되지 않음"
+        print("<img> 태그 존재 확인 ✔️")
+    except:
+        assert False, "complete_element 안에 <img> 태그가 존재하지 않음"
+
+    print("[채팅 고급기능] 이미지생성 (AHCT-T12) 완료!")
+    
+    
+##########################################################################################
+# [채팅 고급기능] 웹검색 (AHCT-T9)
+##########################################################################################
+def test_plus_web(logged_in_driver):    
+    time.sleep(2)
+    driver = logged_in_driver
+    wait = WebDriverWait(driver, 100)
 
     # ---------------------------
     # 플러스 버튼 클릭 (업로드 메뉴 열기)
@@ -143,51 +202,7 @@ def test_plus_image(login_once):
     time.sleep(1)
 
     # ---------------------------
-    # 파일 업로드 버튼 클릭
-    # ---------------------------
-    upload_button = wait.until(
-        EC.element_to_be_clickable(
-            (By.XPATH, '//span[text()="이미지 생성"]')
-        )
-    )
-    upload_button.click()
-    time.sleep(2)
-
-    wait = WebDriverWait(driver, 10)
-
-    image_generate_button = wait.until(
-        EC.element_to_be_clickable(
-            (By.XPATH, '//span[text()="이미지 생성"]')
-        )
-    )
-    assert image_generate_button.is_displayed(), "이미지 생성 클릭 실패!"
-
-    print("이미지 생성 테스트 완료!")
-    
-    
-# ---------------------------
-# 웹 검색 테스트
-# ---------------------------
-def test_plus_web(login_once):
-    # 로그인
-    #login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
-    time.sleep(2)
-    driver = login_once
-    wait = WebDriverWait(driver, 10)
-
-    # ---------------------------
-    # 플러스 버튼 클릭 (업로드 메뉴 열기)
-    # ---------------------------
-    plus_button = wait.until(
-        EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, 'button:has(svg[data-testid="plusIcon"])')
-        )
-    )
-    plus_button.click()
-    time.sleep(1)
-
-    # ---------------------------
-    # 파일 업로드 버튼 클릭
+    # 웹검색 버튼 클릭
     # ---------------------------
     upload_button = wait.until(
         EC.element_to_be_clickable(
@@ -197,14 +212,31 @@ def test_plus_web(login_once):
     upload_button.click()
     time.sleep(2)
 
-    wait = WebDriverWait(driver, 10)
-
-    
     image_generate_button = wait.until(
         EC.element_to_be_clickable(
             (By.XPATH, '//span[text()="웹 검색"]')
         )
     )
-    assert image_generate_button.is_displayed(), "웹 검색 클릭 실패!"
+    #assert image_generate_button.is_displayed(), "웹 검색 클릭 실패!"
+    
+    driver.find_element(By.XPATH,"//textarea[@name='input']").send_keys("치와와 종류 검색해줘")
+    
+    #data-testid arrow-upIcon
+    arrow = wait.until(
+        EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, 'button:has(svg[data-testid="arrow-upIcon"])')
+        )
+    )
+    arrow.click()
+    
+    complete_element = wait.until(
+        EC.visibility_of_element_located(
+            (By.XPATH, '//div[@data-status="complete"]')
+        )
+    )
+
+    assert complete_element.is_displayed(), "웹검색 정상 동작이 확인되지 않음"
+    
+    print("[채팅 고급기능] 웹검색 (AHCT-T9) 완료!")
         
     
