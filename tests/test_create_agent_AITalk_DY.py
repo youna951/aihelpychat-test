@@ -21,10 +21,10 @@ PROMPT = '더이상 질문하지 말고 "비서봇" 이름의 에이전트를 �
 # AHCT - T17 대화로 커스텀 에이전트 생성
 # ------------------------------------------
     
-    # ------------------------------------------
-    #토글 메뉴 내에 "에이전트 탐색" 클릭
-    #에이전트 탐색 → 만들기 → 대화로 만들기까지 이동
-    # ------------------------------------------
+# ------------------------------------------
+#토글 메뉴 내에 "에이전트 탐색" 클릭
+#에이전트 탐색 → 만들기 → 대화로 만들기까지 이동
+# ------------------------------------------
 def go_to_agent_builder_by_talk(driver, wait):
     agent_search = wait.until(
     EC.element_to_be_clickable(
@@ -33,9 +33,9 @@ def go_to_agent_builder_by_talk(driver, wait):
     )
     agent_search.click()
 
-    # ------------------------------------------
-    # 에이전트 탐색>"+ 만들기" 클릭
-    # ------------------------------------------
+# ------------------------------------------
+# 에이전트 탐색>"+ 만들기" 클릭
+# ------------------------------------------
 
     create_agent_AI = wait.until(
     EC.element_to_be_clickable(
@@ -44,9 +44,9 @@ def go_to_agent_builder_by_talk(driver, wait):
     )
     create_agent_AI.click()
 
-    # ------------------------------------------
-    # "대화로 만들기" 클릭
-    # ------------------------------------------
+# ------------------------------------------
+# "대화로 만들기" 클릭
+# ------------------------------------------
 
     create_agent_talk = wait.until(
     EC.element_to_be_clickable(
@@ -55,10 +55,10 @@ def go_to_agent_builder_by_talk(driver, wait):
     )
     create_agent_talk.click()
 
-    # ------------------------------------------
-    # 대화창에 test data 입력
-    #"대화창에 프롬프트 입력 후 전송
-    # ------------------------------------------
+# ------------------------------------------
+# 대화창에 test data 입력
+#"대화창에 프롬프트 입력 후 전송
+# ------------------------------------------
 def send_prompt_for_agent_creation(driver, wait, prompt: str):
     chat_input = wait.until(
     EC.visibility_of_element_located(
@@ -77,10 +77,10 @@ def send_prompt_for_agent_creation(driver, wait, prompt: str):
     )
     send_button.click()
 
-    # ------------------------------------------
-    # AI가 자동으로 채운 에이전트 필드 값 검증
-    # ------------------------------------------
-    #이름 입력란에 "비서봇"이 입력되어있으면 OK
+# ------------------------------------------
+# AI가 자동으로 채운 에이전트 필드 값 검증
+# ------------------------------------------
+#이름 입력란에 "비서봇"이 입력되어있으면 OK
 def assert_name_field(driver, wait):
     name_input = wait.until(
         EC.visibility_of_element_located(
@@ -94,7 +94,7 @@ def assert_name_field(driver, wait):
     name_value = name_input.get_attribute("value")
     assert "비서봇" in name_value, f'에이전트 이름에 "비서봇" 없음: {name_value}'
 
-    # 한줄 소개란에 텍스트가 1자 이상이라도 입력됐으면 OK
+# 한줄 소개란에 텍스트가 1자 이상이라도 입력됐으면 OK
 def assert_description_field(driver, wait):
     description = wait.until(
         EC.visibility_of_element_located(
@@ -104,7 +104,7 @@ def assert_description_field(driver, wait):
     desc_value = description.get_attribute("value")
     assert desc_value.strip() != "", "설명 자동 생성이 되지 않았음"
 
-    #규칙 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
+#규칙 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
 def assert_rules_field(driver, wait):
     rules = wait.until(
         EC.visibility_of_element_located(
@@ -114,7 +114,7 @@ def assert_rules_field(driver, wait):
     rules_value = rules.get_attribute("value")
     assert rules_value.strip() != "", "규칙 자동 생성이 되지 않았음"
 
-    #시작 대화 1번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
+#시작 대화 1번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
 def assert_startscr1_field(driver, wait):
     startscr1 = wait.until(
         EC.visibility_of_element_located(
@@ -124,7 +124,7 @@ def assert_startscr1_field(driver, wait):
     startscr1_value = startscr1.get_attribute("value")
     assert startscr1_value.strip() != "", "시작 대화 1번에 자동 생성이 되지 않았음"
 
-    #시작 대화 2번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
+#시작 대화 2번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
 def assert_startscr2_field(driver, wait):
     startscr2 = wait.until(
         EC.visibility_of_element_located(
@@ -134,7 +134,7 @@ def assert_startscr2_field(driver, wait):
     startscr2_value = startscr2.get_attribute("value")
     assert startscr2_value.strip() != "", "시작 대화 2번에 자동 생성이 되지 않았음"
 
-    #시작 대화 3번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
+#시작 대화 3번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
 def assert_startscr3_field(driver, wait):
     startscr3 = wait.until(
         EC.visibility_of_element_located(
@@ -144,7 +144,7 @@ def assert_startscr3_field(driver, wait):
     startscr3_value = startscr3.get_attribute("value")
     assert startscr3_value.strip() != "", "시작 대화 3번에 자동 생성이 되지 않았음"
 
-    #시작 대화 4번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
+#시작 대화 4번 입력란에 텍스트가 1자 이상이라도 입력됐으면 OK
 def assert_startscr4_field(driver, wait):
     startscr4 = wait.until(
         EC.visibility_of_element_located(
@@ -159,22 +159,22 @@ def assert_startscr4_field(driver, wait):
 # 메인 테스트
 # ------------------------------------------
 def test_AI_Talk(driver):
-    # 공통 wait
+# 공통 wait
     wait = WebDriverWait(driver, 10)
 
-    # 1) 로그인
+# 1) 로그인
     login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
     print("로그인 완료")
 
-    # 2) 에이전트 대화로 만들기 페이지까지 이동
+# 2) 에이전트 대화로 만들기 페이지까지 이동
     go_to_agent_builder_by_talk(driver, wait)
     print("에이전트 대화로 만들기 페이지까지 이동 완료")
 
-    # 3) 프롬프트 전송
+# 3) 프롬프트 전송
     send_prompt_for_agent_creation(driver, wait, PROMPT)
     print("프롬포트 입력 완료")
 
-    # 4) AI가 채워준 필드들 검증
+# 4) AI가 채워준 필드들 검증
     assert_name_field(driver, wait)
     print("이름 확인 완료")
     assert_description_field(driver, wait)
@@ -190,7 +190,7 @@ def test_AI_Talk(driver):
     assert_startscr4_field(driver, wait)
     print("시작 대화 4 확인 완료")
 
-    # 5) 로그아웃 (정리)
+# 5) 로그아웃 (정리)
     logout(driver)
     print("로그아웃 완료")
 

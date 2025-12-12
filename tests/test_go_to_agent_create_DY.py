@@ -50,7 +50,7 @@ def go_to_agent_create(driver, wait):
 # ------------------------------------------
 # 메인 테스트
 # ------------------------------------------
-def test_go_to_agent_search(driver):
+def test_go_to_agent_create(driver):
     wait = WebDriverWait(driver, 10)
     # 로그인
     login(driver, LOGIN_ID, LOGIN_PW)
