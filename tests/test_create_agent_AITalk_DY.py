@@ -12,7 +12,7 @@ import sys, os
 # utils 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.common import login, logout
+from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW
 
 PROMPT = '더이상 질문하지 말고 "비서봇" 이름의 에이전트를 생성해줘'

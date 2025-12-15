@@ -10,7 +10,7 @@ import sys, os
 # utils 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.common import login, logout
+from utils.utils import login, logout
 from utils.constants import LOGIN_ID, LOGIN_PW
 
 # ---------------------------
@@ -236,7 +236,7 @@ def test_messy_input(login_once,test_message):
 
     # 5. 답장이 왔는지만 확인 (내용 무시)
     wait = WebDriverWait(driver, 30)  # 30초까지 기다림
-
+    
     reply = wait.until(
         EC.visibility_of_element_located(
             (By.CSS_SELECTOR, '[data-status="complete"]')
