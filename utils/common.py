@@ -64,7 +64,22 @@ def logout(driver):
         
         
 #util_clearall 값 모두 삭제
-def clear_all(element):
+def clear_all(self, element):
     element.click()
     element.send_keys(Keys.CONTROL, "a")
     element.send_keys(Keys.DELETE)
+
+def wait_visible(driver, locator, timeout=10):
+    return WebDriverWait(driver, timeout).until(
+        EC.visibility_of_element_located(locator)
+    )
+
+def wait_clickable(driver, locator, timeout=10):
+    return WebDriverWait(driver, timeout).until(
+        EC.element_to_be_clickable(locator)
+    )
+
+def wait_invisible(driver, locator, timeout=10):
+    return WebDriverWait(driver, timeout).until(
+        EC.invisibility_of_element_located(locator)
+    )
