@@ -81,3 +81,59 @@ def test_delete_history(prepare_chat_history):
     driver = prepare_chat_history
     page = ChatHistoryPage(driver)
     assert page.delete_history()
+    
+    
+#===============================================================
+# [채팅 히스토리] 히스토리 클릭시 전체 내용 조회 (AHCT-T155)
+#===============================================================
+def test_search_history_click(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.search_history_click()   
+ 
+    
+#===============================================================
+# [채팅 히스토리] 새 대화 버튼 클릭 - 초기화면에서 (AHCT-T156)
+#===============================================================
+def test_click_new_btn1(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.click_new_btn1()
+
+
+#===============================================================
+# [채팅 히스토리] 새 대화 버튼 클릭 - 다른 히스토리 클릭 중 (AHCT-T157)
+#===============================================================
+def test_click_new_btn2(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.click_new_btn2()
+
+
+#===============================================================
+# [채팅 히스토리] 히스토리 검색 - 정상 조회 (AHCT-T158)
+#===============================================================
+def test_search_history_function(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.search_history_function()
+    
+    
+#===============================================================
+# [채팅 히스토리] 히스토리 검색 - 검색 결과 없음 (AHCT-T159)
+#===============================================================
+def test_search_history_function_no_result(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.search_history_function_no_result()
+    
+    
+#===============================================================
+# [채팅 히스토리] 히스토리 검색 - 취소 (AHCT-T160)
+#===============================================================
+def test_search_history_function_cancel(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.search_history_function_cancel()
+    
+    
