@@ -34,17 +34,11 @@ class TestAIReply:
         page.input_textarea("사과의 색깔은?")
         page.send_button_click()
         page.check_response("사과의 색깔은?")
+        page.click_copy_button()
+        print("답변 복사 버튼 클릭 완료!")
 
+        ai_reply = page.get_ai_reply_element().text
 
-        copy_button = page.wait.until(
-        EC.element_to_be_clickable(
-        (By.CSS_SELECTOR, 'button[aria-label="복사"]')
-    )
-)
-        copy_button.click()
-        print("답변 복사버튼 클릭 완료!")
-
-        ai_reply = driver.find_element(By.CSS_SELECTOR, "div.elice-aichat__markdown").text
         # 라이브러리 통해서 답변 내용 복사 
         pyperclip.copy(ai_reply)
 
