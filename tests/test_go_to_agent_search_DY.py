@@ -57,5 +57,6 @@ def test_go_to_agent_search(driver):
 
     # 5) 로그아웃
     logout(driver)
-    print("로그아웃 완료")
+    print("로그아웃 완료") 
+    #
 
