@@ -345,16 +345,99 @@ class ChatHistoryPage:
     # --------------------------        
     # [채팅 히스토리] 메뉴 접기/펼치기 - 상단 ‘메뉴 아이콘’ 버튼 (AHCT-T161)
     # --------------------------
-    
+    def top_menu_off_on(self):
+        # 1. 상단 메뉴 클릭
+        self.wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button:has(svg[data-testid="barsIcon"])'))
+        ).click()
+        
+        # 클릭 후 DOM 상태 갱신 (data-collapsible 값 확인)
+        self.driver.execute_script(
+            "return document.querySelector('aside[aria-hidden=\"false\"]').getAttribute('data-collapsible');"
+        )
+        
+        # 2. 메뉴를 다시 클릭하여 접기
+        self.wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button:has(svg[data-testid="barsIcon"])'))
+        ).click()
+        
+        # 접힌 후 DOM 상태 갱신
+        self.driver.execute_script(
+            "return document.querySelector('aside[aria-hidden=\"false\"]').getAttribute('data-collapsible');"
+        )
+        
+        # 메뉴가 펼쳐졌는지 확인
+        top_menu_on = self.driver.execute_script(
+            "return document.querySelector('aside[aria-hidden=\"false\"]').getAttribute('data-collapsible');"
+        )
+        
+        if top_menu_on == "false":
+            print("[채팅 히스토리] 메뉴 접기/펼치기 - 상단 ‘메뉴 아이콘’ 버튼 (AHCT-T161) 성공!")
+            return True
+        else:
+            print("[채팅 히스토리] 메뉴 접기/펼치기 - 상단 ‘메뉴 아이콘’ 버튼 (AHCT-T161) 실패 / top_menu_off_on")
+            return False
+
+            
     
     # --------------------------        
     # [채팅 히스토리] 메뉴 접기/펼치기 - 하단 ‘메뉴 접기’ 버튼 (AHCT-T162)
     # --------------------------
-    
+    def bottom_menu_off_on(self):
+        # 1. 하단 메뉴 클릭
+        self.wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button:has(svg[data-testid="arrow-left-to-lineIcon"])'))
+        ).click()
+        
+        # 클릭 후 DOM 상태 갱신 (data-collapsible 값 확인)
+        self.driver.execute_script(
+            "return document.querySelector('aside[aria-hidden=\"false\"]').getAttribute('data-collapsible');"
+        )
+        
+        # 2. 메뉴를 다시 클릭하여 접기
+        self.wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button:has(svg[data-testid="arrow-right-to-lineIcon"])'))
+        ).click()
+        
+        # 접힌 후 DOM 상태 갱신
+        self.driver.execute_script(
+            "return document.querySelector('aside[aria-hidden=\"false\"]').getAttribute('data-collapsible');"
+        )
+        
+        # 메뉴가 펼쳐졌는지 확인
+        bottom_menu_on = self.driver.execute_script(
+            "return document.querySelector('aside[aria-hidden=\"false\"]').getAttribute('data-collapsible');"
+        )
+        
+        if bottom_menu_on == "false":
+            print("[채팅 히스토리] 메뉴 접기/펼치기 - 하단 ‘메뉴 접기’ 버튼 (AHCT-T162) 성공!")
+            return True
+        else:
+            print("[채팅 히스토리] 메뉴 접기/펼치기 - 하단 ‘메뉴 접기’ 버튼 (AHCT-T162) 실패 / top_menu_off_on")
+            return False
     
     # --------------------------        
     # [채팅 히스토리] 메뉴 접기/펼치기 - 메뉴 자동 열림/닫힘 (AHCT-T163)
     # --------------------------
-         
+    def auto_menu_off_on(self):
+        # 1. 상단 메뉴 클릭(숨기기)
+        self.wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button:has(svg[data-testid="barsIcon"])'))
+        ).click()
         
+        # 2. 마우스 오버
+        first_chat = self.get_first_chat()
+        self.open_menu(first_chat)
         
+        # 3. 펼친 후 DOM 상태 갱신
+        auto_menu_on = self.driver.execute_script(
+            "return document.querySelector('div[data-testid=\"virtuoso-scroller\"]').style.opacity;"
+        )
+        
+        # 4. 메뉴가 펼쳐졌는지 확인
+        if auto_menu_on == "1":
+            print("[채팅 히스토리] 메뉴 접기/펼치기 - 메뉴 자동 열림/닫힘 (AHCT-T163) 성공!")
+            return True
+        else:
+            print("[채팅 히스토리] 메뉴 접기/펼치기 - 메뉴 자동 열림/닫힘 (AHCT-T163) 실패 / auto_menu_off_on")
+            return False
