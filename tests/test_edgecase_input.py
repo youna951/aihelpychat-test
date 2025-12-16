@@ -23,8 +23,8 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 # ---------------------------
 
 
-def test_cancel_reply(login_once):
-    driver = login_once
+def test_cancel_reply(logged_in_driver):
+    driver = logged_in_driver
     wait = WebDriverWait(driver, 15)
 
     # 요소 선언 (랜더링 되면 요소를 못찾아서, 필요할 때마다 꺼내쓰기)

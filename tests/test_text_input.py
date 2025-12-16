@@ -17,9 +17,9 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 # 단어형 입력 (AHCT-T104)
 # ---------------------------
 
-def test_word_input(login_once):
+def test_word_input(logged_in_driver):
     time.sleep(2)
-    driver = login_once
+    driver = logged_in_driver
     wait = WebDriverWait(driver, 10)
 
      # 1. 입력창 찾기
