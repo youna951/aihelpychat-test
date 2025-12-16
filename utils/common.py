@@ -64,7 +64,7 @@ def logout(driver):
         
         
 #util_clearall 값 모두 삭제
-def clear_all(self, element):
+def clear_all(element):
     element.click()
     element.send_keys(Keys.CONTROL, "a")
     element.send_keys(Keys.DELETE)

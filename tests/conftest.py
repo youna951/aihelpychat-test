@@ -34,7 +34,7 @@ def driver():
 ########################################################################
 # 브라우저 공유, 로그인 필요 없음 → driver_session
 ########################################################################
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def driver_session():
     chrome_options = Options()
     chrome_options.add_experimental_option("detach", True)
@@ -53,7 +53,7 @@ def driver_session():
 # 로그인 (pytest 전체 세션에서 1회만 실행)
 # 브라우저 공유 + 로그인 필요 → login_once
 ########################################################################
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def login_once(driver_session):
     login(driver_session, LOGIN_ID, LOGIN_PW, check_success=True)    
     return driver_session
