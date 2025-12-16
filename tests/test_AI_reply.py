@@ -57,6 +57,36 @@ class TestAIReply:
         assert pasted_text == ai_reply
         print("답변 복사 기능 테스트 완료!")
 
+#    ---------------------------
+#     답변 다시생성 기능 (AHCT-T168)
+#     AI가 준 답변에서의 하단의 '다시생성' 버튼 테스트
+#     ---------------------------
+
+    def test_reply_regenerate(self,prepare_AI_reply):
+        driver = prepare_AI_reply
+        wait = WebDriverWait(driver, 10)
+        page = ChatMainPage(driver)
+        page.input_textarea("가나디로 삼행시 지어줘")
+        page.send_button_click()
+        page.check_UI_visible("가나디로 삼행시 지어줘")
+
+        # 최초 답변 저장
+        old_reply_text = page.get_ai_reply_element().text
+
+        page.get_regenerate_button()
+        page.click_regenerate_button()
+
+        time.sleep(10)
+        print("답변 다시생성 버튼 클릭 완료!")
+
+        # \ : 파이썬 내부 줄바꿈 허용
+        assert page.compare_reply_regenerate(old_reply_text), \
+        "다시생성 버튼 클릭 후, 답변이 변경되지 않음"
+
+        print("답변 다시 생성 테스트 완료!")
+
+
+        
 
 
 
