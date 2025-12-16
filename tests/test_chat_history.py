@@ -137,3 +137,28 @@ def test_search_history_function_cancel(prepare_chat_history):
     assert page.search_history_function_cancel()
     
     
+# --------------------------        
+# [채팅 히스토리] 메뉴 접기/펼치기 - 상단 ‘메뉴 아이콘’ 버튼 (AHCT-T161)
+# --------------------------
+def test_top_menu_off_on(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.top_menu_off_on()
+
+
+# --------------------------        
+# [채팅 히스토리] 메뉴 접기/펼치기 - 하단 ‘메뉴 접기’ 버튼 (AHCT-T162)
+# --------------------------
+def test_bottom_menu_off_on(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.bottom_menu_off_on()
+
+
+# --------------------------        
+# [채팅 히스토리] 메뉴 접기/펼치기 - 메뉴 자동 열림/닫힘 (AHCT-T163)
+# --------------------------
+def test_auto_menu_off_on(prepare_chat_history):
+    driver = prepare_chat_history
+    page = ChatHistoryPage(driver)
+    assert page.auto_menu_off_on()
