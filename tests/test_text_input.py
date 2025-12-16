@@ -208,6 +208,9 @@ def test_messy_input(login_once,test_message):
         )
     )
 
+    # @parametrize는 같은 브라우저, 같은 textarea를 재사용해서 입력전에 clear() 해주기
+    input_box.clear()
+
     # 2. 입력창에 단어 입력
     input_box.send_keys(test_message)
 
