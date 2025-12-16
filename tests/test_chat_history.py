@@ -16,6 +16,7 @@ from pages.chat_history_page import ChatHistoryPage
 @pytest.fixture
 def prepare_chat_history(login_once):
     driver = login_once
+    #driver = logged_in_driver
     #wait = WebDriverWait(driver, 10)
     #time.sleep(1)
 

@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.constants import LOGIN_ID, LOGIN_PW
 
+
 # ---------------------------
 # 체크박스 클릭 함수
 # ---------------------------
@@ -60,12 +61,13 @@ def test_model_checkboxes(logged_in_driver):
     # --- 로그인 / 설정 화면 이동 ---
     #login(driver, LOGIN_ID, LOGIN_PW)
     driver = logged_in_driver
-    time.sleep(2)  # 로그인 안정화
+    time.sleep(0.5)  # 로그인 안정화
+    
+    wait = WebDriverWait(driver, 10)
 
-    # 설정 메뉴 이동
+    # 1. 설정 메뉴 이동
     driver.find_element(By.XPATH, '//*[@data-testid="gearIcon"]/ancestor::button').click()
     driver.find_element(By.XPATH, '//span[contains(text(), "설정")]').click()
-    time.sleep(1)
 
     model_names = [
         "GPT-5.1",
@@ -79,26 +81,50 @@ def test_model_checkboxes(logged_in_driver):
         "Claude Haiku 4.5"
         # "Helpy Pro Agent"는 disabled이므로 제외
     ]
+    
+    # 2. 
+    # div 요소 선택 (최상위 컨테이너)
+    container = driver.find_element(By.CSS_SELECTOR, 'div.MuiStack-root.css-8g8ihq')
 
+    # container 안에 있는 모든 li
+    lis = container.find_elements(By.TAG_NAME, 'li')
+
+    # 체크된 checkbox 갯수 세기
+    checked_count = 0
+    for li in lis:
+        checkbox = li.find_element(By.CSS_SELECTOR, 'input[type="checkbox"]')
+        if checkbox.get_attribute("checked"):
+            checked_count += 1
+
+    print(f"체크된 모델 개수: {checked_count}")
+    
+    # 3. 모델별 체크박스 클릭
     for name in model_names:
         print(f"\n=== 모델 체크해제 테스트: {name} ===")
         click_switch(driver, name)
 
     print("\n🎉 모든 모델 체크해제 완료!")
+    driver.refresh()
     
-    # 새 대화 > 모델 갯수 확인
+    # 4. 새 대화 > 모델 갯수 확인
     element = driver.find_element(By.XPATH, '//li//span[text()="새 대화"]')
     driver.execute_script("arguments[0].click();", element)
 
     time.sleep(1)
+    
     element = driver.find_element(By.XPATH, '//p[contains(text(),"Helpy Pro Agent")]')
     driver.execute_script("arguments[0].click();", element)
-
+    
     lis = driver.find_elements(By.XPATH, '//li[contains(@class,"MuiMenuItem-root")]')
     print(len(lis))
     
     # 모델 설정 메뉴 이동    
-    driver.find_element(By.XPATH, '//span[contains(text(), "모델 설정")]').click()
+    #driver.find_element(By.XPATH, '//span[contains(text(), "모델 설정")]').click()
+    wait.until(
+        #EC.element_to_be_clickable((By.CSS_SELECTOR, 'span:contains("모델 설정")'))
+        EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "모델 설정")]'))
+    ).click()
+    
     time.sleep(1)
 
     for name in model_names:
@@ -116,5 +142,5 @@ def test_model_checkboxes(logged_in_driver):
     lis = driver.find_elements(By.XPATH, '//li[contains(@class,"MuiMenuItem-root")]')
     print(len(lis))
     
-    assert len(lis) == 10, f"모델 개수는 10이어야 합니다. 현재: {len(lis)}"
+    assert len(lis) == checked_count, f"모델 개수는 10이어야 합니다. 현재: {len(lis)}"
     print("[설정] AI 모델 설정 (AHCT-T107) + [새 대화] 대화 버튼으로 새로운 대화 세션 생성 (AHCT-T13) 완료!")

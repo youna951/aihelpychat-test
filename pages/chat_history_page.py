@@ -58,26 +58,32 @@ class ChatHistoryPage:
     # [채팅 히스토리] 히스토리 타이틀 수정 - 정상 (AHCT-T151)
     # --------------------------
     def rename_history(self, new_title="이름변경 자동화 테스트"):
-        first_chat = self.get_first_chat()
-        self.open_menu(first_chat)
-
-        rename_btn = self.wait.until(
-            EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "이름 변경")]'))
-        )
-        rename_btn.click()
-
-        input_box = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'form input[type="text"]')))
-        clear_all(input_box)
-        input_box.send_keys(new_title)
-
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "저장")]'))).click()
-
         try:
-            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[role="alert"]')))
-            print("[채팅 히스토리] 히스토리 타이틀 수정 - 정상 (AHCT-T151) 성공!")
-            return True
-        except TimeoutException:
-            print("[채팅 히스토리] 히스토리 타이틀 수정 - 정상 (AHCT-T151) 실패 / rename_history")
+            first_chat = self.get_first_chat()
+            self.open_menu(first_chat)
+
+            rename_btn = self.wait.until(
+                EC.element_to_be_clickable((By.XPATH, '//span[contains(text(), "이름 변경")]'))
+            )
+            rename_btn.click()
+
+            input_box = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'form input[type="text"]')))
+            clear_all(input_box)
+            input_box.send_keys(new_title)
+
+            self.wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "저장")]'))).click()
+
+            try:
+                self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[role="alert"]')))
+                print("[채팅 히스토리] 히스토리 타이틀 수정 - 정상 (AHCT-T151) 성공!")
+                return True
+            except TimeoutException:
+                print("[채팅 히스토리] 히스토리 타이틀 수정 - 정상 (AHCT-T151) 실패 / rename_history")
+                return False
+            
+        except Exception as e:
+            # Selenium 관련 다른 오류까지 모두 잡아서 출력
+            print(f"[채팅 히스토리] 히스토리 타이틀 수정 - 정상 (AHCT-T151) ❌ 실패 / 예외 발생: {e}")
             return False
 
     # --------------------------

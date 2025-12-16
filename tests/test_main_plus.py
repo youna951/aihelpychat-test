@@ -15,6 +15,7 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 
 # ---------------------------------------------------------------------------------
 # 메시지 입력 창 좌측 "+" 버튼 클릭 기능 테스트
+# 
 # ---------------------------------------------------------------------------------
 
 ##########################################################################################
@@ -23,10 +24,9 @@ from utils.constants import LOGIN_ID, LOGIN_PW
 def test_plus_fileUpload(logged_in_driver):
     # 로그인
     #login(driver, LOGIN_ID, LOGIN_PW, check_success=True)
-    driver = logged_in_driver
-    time.sleep(2)
-
+    driver = logged_in_driver    
     wait = WebDriverWait(driver, 100)
+    driver.refresh()
 
     # ---------------------------
     # 플러스 버튼 클릭 (업로드 메뉴 열기)
@@ -124,9 +124,9 @@ def test_plus_fileUpload(logged_in_driver):
 # [채팅 고급기능] 이미지생성 (AHCT-T12)
 ##########################################################################################
 def test_plus_image(logged_in_driver):
-    time.sleep(2)
     driver = logged_in_driver
     wait = WebDriverWait(driver, 100)
+    driver.refresh()
     # ---------------------------
     # 플러스 버튼 클릭 (업로드 메뉴 열기)
     # ---------------------------
@@ -173,11 +173,13 @@ def test_plus_image(logged_in_driver):
     )
     # complete_element 안에 img 태그가 존재하는지 확인
     try:
-        img_inside = complete_element.find_element(By.TAG_NAME, "img")
+        img_inside = wait.until(
+            EC.visibility_of(complete_element.find_element(By.XPATH, ".//img"))
+        )
         assert img_inside.is_displayed(), "<img> 태그가 표시되지 않음"
         print("<img> 태그 존재 확인 ✔️")
-    except:
-        assert False, "complete_element 안에 <img> 태그가 존재하지 않음"
+    except Exception as e:
+        raise AssertionError(e)
 
     print("[채팅 고급기능] 이미지생성 (AHCT-T12) 완료!")
     
@@ -186,9 +188,9 @@ def test_plus_image(logged_in_driver):
 # [채팅 고급기능] 웹검색 (AHCT-T9)
 ##########################################################################################
 def test_plus_web(logged_in_driver):    
-    time.sleep(2)
     driver = logged_in_driver
     wait = WebDriverWait(driver, 100)
+    driver.refresh()
 
     # ---------------------------
     # 플러스 버튼 클릭 (업로드 메뉴 열기)
