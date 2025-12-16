@@ -22,7 +22,6 @@ class ChatMainPage:
     # 공통 요소/행동
     # ==========================
 
-
     # 텍스트 입력
     def input_textarea(self, text: str = ""):
         textarea = self.wait.until(
@@ -64,6 +63,26 @@ class ChatMainPage:
         self.input_textarea(text)
         self.send_button_click()
         return self.check_response(text)
+    
+      # 답변 하단 '복사'버튼 찾기  
+    def get_copy_button(self):
+        return self.wait.until(
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, 'button[aria-label="복사"]')
+            )
+        )
+    # 답변 하단 '복사'버튼 클릭
+    def click_copy_button(self):
+        self.get_copy_button().click()
+
+     # 전체 답변 내용 요소 접근
+    def get_ai_reply_element(self):
+        return self.wait.until(
+            EC.visibility_of_element_located(
+                (By.CSS_SELECTOR, "div.elice-aichat__markdown")
+            )
+        )
+
     
     # 붙여넣기 (os별로 단축키 다름)
     def paste_clipboard(self, textarea):
