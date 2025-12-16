@@ -43,7 +43,7 @@ class ChatMainPage:
         return send_button
 
     # 전송된 메시지가 UI에 나타나는지 확인
-    def check_response(self, text: str = ""):
+    def check_UI_visible(self, text: str = ""):
         response = self.wait.until(
             EC.visibility_of_element_located(
                 (
