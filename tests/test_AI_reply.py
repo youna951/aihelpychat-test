@@ -15,8 +15,8 @@ import pyperclip
 # 로그인 세션은 conftest.py의 login_once fixture 사용
 #===============================================================
 @pytest.fixture
-def prepare_AI_reply(logged_in_driver):
-    driver = logged_in_driver
+def prepare_AI_reply(login_once):
+    driver = login_once
     return driver
 
 
@@ -33,7 +33,7 @@ class TestAIReply:
         page = ChatMainPage(driver)
         page.input_textarea("사과의 색깔은?")
         page.send_button_click()
-        page.check_response("사과의 색깔은?")
+        page.check_UI_visible("사과의 색깔은?")
         page.click_copy_button()
         print("답변 복사 버튼 클릭 완료!")
 
@@ -69,14 +69,14 @@ class TestAIReply:
         page = ChatMainPage(driver)
         page.input_textarea("가나디로 삼행시 지어줘")
         page.send_button_click()
-        page.check_response("가나디로 삼행시 지어줘")
+        page.check_UI_visible("가나디로 삼행시 지어줘")
 
-#         regenerate_button = page.wait.until(
-#         EC.element_to_be_clickable(
-#         (By.CSS_SELECTOR, 'button[aria-label="다시 생성"]')
+        regenerate_button = page.wait.until(
+        EC.element_to_be_clickable(
+        (By.CSS_SELECTOR, 'button[aria-label="다시 생성"]')
         
-#     )
-# )
+    )
+)
         page.click_regenerate_button()
 #         print("답변 다시생성 버튼 클릭 완료!")
 
