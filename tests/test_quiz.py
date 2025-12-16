@@ -13,7 +13,7 @@ from selenium.webdriver.common.keys import Keys
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.utils import clear_all
+from utils.common import clear_all
 from utils.constants import LOGIN_ID, LOGIN_PW   # 🔥 상수 import
 
 
