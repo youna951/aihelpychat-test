@@ -135,3 +135,38 @@ class ChatMainPage:
             return True
         except TimeoutException:
             return False
+        
+    # 이전 답변 (<) 버튼 찾기
+    def get_previous_reply_button(self):
+        button = self.wait.until(
+        lambda d: d.find_element(
+            By.CSS_SELECTOR,
+            'svg[data-testid="chevron-leftIcon"]'
+            # 부모요소(버튼)으로 올라가기
+        ).find_element(By.XPATH, "..")
+    )
+        self.wait.until(lambda d: button.is_displayed() and button.is_enabled())
+        return button
+    
+    # 이전 답변 (<) 버튼 클릭
+    def click_previous_reply_button(self):
+        self.get_previous_reply_button().click()
+
+  
+
+    # 다음 답변 (>) 버튼 찾기  
+    def get_next_reply_button(self):
+        button = self.wait.until(
+        lambda d: d.find_element(
+            By.CSS_SELECTOR,
+            # (리팩토링 할 때) 클래스 이름말고 다른 요소로 구체화하기 
+            # div 범위 구체적으로 (다른 버튼 요소랑 겹침)
+            'div.css-4ved3l.ejxvx3b1 svg[data-testid="chevron-rightIcon"]'
+        ).find_element(By.XPATH, "..")
+    )
+        self.wait.until(lambda d: button.is_displayed() and button.is_enabled())
+        return button
+    
+    # 다음 답변 (>) 버튼 클릭
+    def click_next_reply_button(self):
+        self.get_next_reply_button().click()

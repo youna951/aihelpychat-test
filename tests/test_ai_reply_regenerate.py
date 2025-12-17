@@ -38,31 +38,52 @@ class TestAIReply:
 
         # 최초 답변 저장
         old_reply_text = page.get_ai_reply_element().text
-
+        # 사용자가 화면 확인하기 전 화면이 너무 빨리 꺼짐
+        time.sleep(1)
         page.get_regenerate_button()
+        # 사용자가 화면 확인하기 전 화면이 너무 빨리 꺼짐
+        time.sleep(1)
         page.click_regenerate_button()
+        # 사용자가 화면 확인하기 전 화면이 너무 빨리 꺼짐
+        time.sleep(1)
 
-        time.sleep(8)
-        print("답변 다시생성 버튼 클릭 완료!")
+        print("답변 다시생성 버튼 클릭 성공!")
+
+        # 이전 답변 버튼 (<) 클릭 (assert나 파일을 나누기 애매해서 try-catch 사용)
+        try:
+            page.get_previous_reply_button()
+            page.click_previous_reply_button()
+            print("이전 답변 버튼 클릭 성공!")
+
+        except Exception as e:
+            print(f"이전 답변 버튼 클릭 실패: {e}")
+
+      
+        # 사용자가 화면 확인하기 전 화면이 너무 빨리 꺼짐
+        time.sleep(1)
+
+          # 다음 답변 버튼 (>) 클릭 (assert나 파일을 나누기 애매해서 try-catch 사용)
+        try:
+            page.get_next_reply_button()
+            page.click_next_reply_button()
+            print("다음 답변 버튼 클릭 성공!")
+
+        except Exception as e:
+            print(f"다음 답변 버튼 클릭 실패: {e}")
+
+      
+        # 사용자가 화면 확인하기 전 화면이 너무 빨리 꺼짐
+        time.sleep(1)
+
+
 
         # \ : 파이썬 내부 줄바꿈 허용
         assert page.compare_reply_regenerate(old_reply_text), \
         "다시생성 버튼 클릭 후, 답변이 변경되지 않음"
 
-        print("답변 다시 생성 테스트 완료!")
+        print("답변 다시 생성 테스트 성공!")
 
 
-        
-
-
-
-        
-
-
-
-
-
-    
 
 
 
