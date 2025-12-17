@@ -56,17 +56,3 @@ class TestAIReply:
 
         assert pasted_text == ai_reply
         print("답변 복사 기능 테스트 완료!")
-
-
-
-
-        
-
-
-
-
-
-    
-
-
-

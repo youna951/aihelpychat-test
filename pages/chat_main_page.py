@@ -17,12 +17,18 @@ class ChatMainPage:
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
 
-
     # ==========================
     # 공통 요소/행동
     # ==========================
+    
+
+#   ---------------------------
+#     텍스트 보내기
+#   ---------------------------       
+    
 
     # 텍스트 입력
+
     def input_textarea(self, text: str = ""):
         textarea = self.wait.until(
             EC.visibility_of_element_located(
@@ -58,13 +64,19 @@ class ChatMainPage:
         )
         return response
 
+    # 수정하기
     # 답장이 왔는지만 확인 (내용 무시)
     def input_and_check_response(self, text: str = ""):
         self.input_textarea(text)
         self.send_button_click()
-        return self.check_response(text)
+        return self.check_UI_visible(text)
     
-      # 답변 하단 '복사'버튼 찾기  
+#   ---------------------------
+#     답변 복사 기능 
+#   ---------------------------       
+        
+
+      # 답변 하단 '복사'버튼 찾기
     def get_copy_button(self):
         return self.wait.until(
             EC.element_to_be_clickable(
@@ -72,6 +84,7 @@ class ChatMainPage:
             )
         )
     # 답변 하단 '복사'버튼 클릭
+
     def click_copy_button(self):
         self.get_copy_button().click()
 
@@ -83,8 +96,8 @@ class ChatMainPage:
             )
         )
 
-    
     # 붙여넣기 (os별로 단축키 다름)
+
     def paste_clipboard(self, textarea):
         textarea.click()
         if sys.platform == "darwin":
@@ -92,6 +105,68 @@ class ChatMainPage:
         else:
             textarea.send_keys(Keys.CONTROL, 'v')
 
+#   ---------------------------
+#     답변 다시생성
+#   ---------------------------
+
+       # 답변 하단 '다시 생성' 버튼 찾기
+
+    def get_regenerate_button(self):
+          return self.wait.until(
+        EC.element_to_be_clickable(
+        (By.CSS_SELECTOR, 'button[aria-label="다시 생성"]')
+
+    )
+)
+    # 답변 하단 '다시 생성'버튼 클릭
+
+    def click_regenerate_button(self):
+        self.get_regenerate_button().click()
 
 
+    # 기존답변 & 새로 생성된 답변 비교
+    # 새 답변이 아직 안 바뀌었는데 바로 text를 읽을 수 있어서, 텍스트가 바뀔 때까지 wait
 
+    def compare_reply_regenerate(self, old_text: str, timeout: int = 20) -> bool:
+        try:
+            WebDriverWait(self.driver, timeout).until(
+            lambda d: self.get_ai_reply_element().text != old_text
+        )
+            return True
+        except TimeoutException:
+            return False
+        
+    # 이전 답변 (<) 버튼 찾기
+    def get_previous_reply_button(self):
+        button = self.wait.until(
+        lambda d: d.find_element(
+            By.CSS_SELECTOR,
+            'svg[data-testid="chevron-leftIcon"]'
+            # 부모요소(버튼)으로 올라가기
+        ).find_element(By.XPATH, "..")
+    )
+        self.wait.until(lambda d: button.is_displayed() and button.is_enabled())
+        return button
+    
+    # 이전 답변 (<) 버튼 클릭
+    def click_previous_reply_button(self):
+        self.get_previous_reply_button().click()
+
+  
+
+    # 다음 답변 (>) 버튼 찾기  
+    def get_next_reply_button(self):
+        button = self.wait.until(
+        lambda d: d.find_element(
+            By.CSS_SELECTOR,
+            # (리팩토링 할 때) 클래스 이름말고 다른 요소로 구체화하기 
+            # div 범위 구체적으로 (다른 버튼 요소랑 겹침)
+            'div.css-4ved3l.ejxvx3b1 svg[data-testid="chevron-rightIcon"]'
+        ).find_element(By.XPATH, "..")
+    )
+        self.wait.until(lambda d: button.is_displayed() and button.is_enabled())
+        return button
+    
+    # 다음 답변 (>) 버튼 클릭
+    def click_next_reply_button(self):
+        self.get_next_reply_button().click()
