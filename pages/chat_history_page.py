@@ -47,8 +47,45 @@ class ChatHistoryPage:
     # ==========================
     def check_history_visible(self):
         try:
+            scroller = self.wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, '[data-testid="virtuoso-scroller"]'))
+            )
+
+            scroll_step = 500  # 한 번에 px 단위 스크롤
+            last_total = 0
+
+            while True:
+                ui_container = scroller.find_element(By.CSS_SELECTOR, '[data-testid="virtuoso-item-list"]')
+                items = ui_container.find_elements(By.TAG_NAME, "a")
+                total_items = len(items)
+                print("total_items:", total_items, flush=True)
+
+                if total_items == 0:
+                    print("[채팅 히스토리] a 태그가 없음", flush=True)
+                    return False
+
+                # scrollHeight 대비 scrollTop
+                scroll_height = self.driver.execute_script("return arguments[0].scrollHeight", scroller)
+                scroll_top = self.driver.execute_script("return arguments[0].scrollTop", scroller)
+                client_height = self.driver.execute_script("return arguments[0].clientHeight", scroller)
+
+                # 마지막까지 내려가면 break
+                if scroll_top + client_height >= scroll_height:
+                    break
+
+                # 스크롤
+                self.driver.execute_script(f"arguments[0].scrollBy(0, {scroll_step});", scroller)
+                time.sleep(1)  # 렌더링 대기
+
+            # 마지막 아이템 확인
+            last_item = ui_container.find_elements(By.TAG_NAME, "a")[-1]
+            print("last_item 텍스트:", last_item.text, flush=True)
+            self.wait.until(lambda d: last_item.is_displayed())
+            
+            assert last_item.is_displayed(), "[채팅 히스토리] 마지막 아이템 화면에 표시되지 않음"
+
+            print("[채팅 히스토리] 채팅 히스토리 스크롤 확인 (AHCT-T150) 성공!", flush=True)
             self.wait.until(EC.presence_of_element_located((By.XPATH, '//ul[@data-testid="virtuoso-item-list"]')))
-            print("[채팅 히스토리] 채팅 히스토리 스크롤 확인 (AHCT-T150) 성공!")
             return True
         except TimeoutException:
             print("[채팅 히스토리] 채팅 히스토리 스크롤 확인 (AHCT-T150) 실패 / check_history_visible")
@@ -297,7 +334,7 @@ class ChatHistoryPage:
         
         input_box = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="text"][placeholder="Search"]')))
         clear_all(input_box)
-        input_box.send_keys("멍멍이")
+        input_box.send_keys("python jenkins")
         
         try:
             no_result = self.wait.until(
